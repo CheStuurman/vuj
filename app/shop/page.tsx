@@ -3,12 +3,17 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+
 import { useCart } from "../../context/CartContext";
 
 export default function ProductPage() {
   const [selectedSize, setSelectedSize] = useState("");
 
-  const { cart, addToCart } = useCart();
+  const {
+    cart,
+    addToCart,
+    openBag,
+  } = useCart();
 
   const totalItems = cart.reduce(
     (total, item) => total + item.quantity,
@@ -25,16 +30,16 @@ export default function ProductPage() {
       id: "waist-cut-out-dress",
       name: "Waist Cut Out Dress",
       price: 1890,
-      image: "/AKT_1233.JPG",
+      image: "/AKT_1212.JPG",
       size: selectedSize,
       quantity: 1,
     });
+
+    openBag();
   };
 
   return (
     <main className="min-h-screen bg-white text-black">
-      {/* Header */}
-
       <header className="flex items-center justify-between px-10 py-8 border-b">
         <Link href="/">
           <Image
@@ -53,17 +58,16 @@ export default function ProductPage() {
 
           <Link href="/contact">Contact</Link>
 
-          <button className="uppercase tracking-[0.25em]">
+          <button
+            onClick={openBag}
+            className="uppercase tracking-[0.25em]"
+          >
             BAG ({totalItems})
           </button>
         </nav>
       </header>
 
-      {/* Product */}
-
       <section className="max-w-7xl mx-auto px-10 py-20 grid lg:grid-cols-2 gap-20">
-        {/* Images */}
-
         <div className="space-y-8">
           <Image
             src="/AKT_1233.JPG"
@@ -90,8 +94,6 @@ export default function ProductPage() {
           />
         </div>
 
-        {/* Product Details */}
-
         <div className="sticky top-20 h-fit">
           <h1 className="text-5xl font-light">
             Waist Cut Out Dress
@@ -109,8 +111,6 @@ export default function ProductPage() {
             The Waist Cut Out Dress celebrates clean lines,
             refined proportions and timeless femininity.
           </p>
-
-          {/* Sizes */}
 
           <div className="mt-12">
             <h3 className="uppercase tracking-[0.2em] text-sm mb-4">
@@ -133,8 +133,6 @@ export default function ProductPage() {
               ))}
             </div>
           </div>
-
-          {/* Add to Bag */}
 
           <button
             onClick={handleAddToBag}

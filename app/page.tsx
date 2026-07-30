@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useCart } from "../context/CartContext";
 
 export default function Home() {
-  const { cart } = useCart();
+const { cart, openBag } = useCart();
 
   const totalItems = cart.reduce(
     (total, item) => total + item.quantity,
@@ -32,9 +32,12 @@ export default function Home() {
 
           <Link href="/contact">Contact</Link>
 
-          <Link href="/bag">
-            BAG ({totalItems})
-          </Link>
+          <button
+  onClick={openBag}
+  className="uppercase tracking-[0.25em]"
+>
+  BAG ({totalItems})
+</button>
         </nav>
       </header>
 
