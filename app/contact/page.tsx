@@ -1,6 +1,11 @@
+"use client";
+
+import { useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { Libre_Baskerville } from "next/font/google";
+
+import { useCart } from "../../context/CartContext";
+import { useTransition } from "../../context/TransitionContext";
 
 const libreBaskerville = Libre_Baskerville({
   subsets: ["latin"],
@@ -8,11 +13,28 @@ const libreBaskerville = Libre_Baskerville({
 });
 
 export default function ContactPage() {
+  const { cart, openBag } = useCart();
+  const { navigate, hideOverlay } = useTransition();
+
+  // Contact page has loaded.
+  // Tell the transition system to reveal it.
+  useEffect(() => {
+    hideOverlay();
+  }, [hideOverlay]);
+
+  const totalItems = cart.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
+
   return (
     <main className="min-h-screen bg-white text-black">
-      {/* Header */}
-      <header className="flex items-center justify-between border-b border-black px-10 py-8">
-        <Link href="/">
+      <header className="flex items-center justify-between border-b px-10 py-8">
+        <button
+          type="button"
+          onClick={() => navigate("/")}
+          aria-label="Home"
+        >
           <Image
             src="/logo.png"
             alt="VÚJ"
@@ -20,16 +42,43 @@ export default function ContactPage() {
             height={40}
             priority
           />
-        </Link>
+        </button>
 
-        <nav className="flex items-center gap-10 text-xs uppercase tracking-[0.3em]">
-          <Link href="/">Home</Link>
-          <Link href="/shop">Shop</Link>
-          <Link href="/contact">Contact</Link>
+        <nav className="flex items-center gap-10 text-sm uppercase tracking-[0.25em]">
+          <button
+            type="button"
+            onClick={() => navigate("/")}
+            className="uppercase tracking-[0.25em]"
+          >
+            Home
+          </button>
+
+          <button
+            type="button"
+            onClick={() => navigate("/?view=shop")}
+            className="uppercase tracking-[0.25em]"
+          >
+            Shop
+          </button>
+
+          <button
+            type="button"
+            onClick={() => navigate("/contact")}
+            className="uppercase tracking-[0.25em]"
+          >
+            Contact
+          </button>
+
+          <button
+            type="button"
+            onClick={openBag}
+            className="uppercase tracking-[0.25em]"
+          >
+            BAG {String(totalItems).padStart(2, "0")}
+          </button>
         </nav>
       </header>
 
-      {/* Contact */}
       <section className="flex justify-center pt-20">
         <div className="text-center">
           <h1 className="mb-5 text-[1.75rem] font-extralight uppercase tracking-[0.22em]">
