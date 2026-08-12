@@ -1,9 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
+import {
+  Suspense,
+  useEffect,
+} from "react";
 import { useSearchParams } from "next/navigation";
 
-export default function PaymentPage() {
+function PaymentContent() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -68,5 +71,13 @@ export default function PaymentPage() {
         </p>
       </div>
     </main>
+  );
+}
+
+export default function PaymentPage() {
+  return (
+    <Suspense fallback={null}>
+      <PaymentContent />
+    </Suspense>
   );
 }
