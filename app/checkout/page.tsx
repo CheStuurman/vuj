@@ -7,7 +7,7 @@ import { useCart } from "../../context/CartContext";
 import { useTransition } from "../../context/TransitionContext";
 
 export default function CheckoutPage() {
- const { cart, openBag, subtotal } = useCart();
+  const { cart, openBag, subtotal } = useCart();
   const { navigate } = useTransition();
 
   const totalItems = cart.reduce(
@@ -20,57 +20,57 @@ export default function CheckoutPage() {
   const [email, setEmail] = useState("");
 
   async function continueToPayment(e: React.FormEvent) {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (cart.length === 0) {
-    alert("Your bag is empty.");
-    return;
-  }
-
-  try {
-    const response = await fetch("/api/orders", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        firstName,
-        lastName,
-        email,
-        subtotal,
-        items: cart.map((item) => ({
-          productId: item.id,
-          productName: item.name,
-          size: item.size,
-          quantity: item.quantity,
-          price: item.price,
-        })),
-      }),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      console.error("Order creation failed:", data);
-      alert(data.error ?? "Unable to create order.");
+    if (cart.length === 0) {
+      alert("Your bag is empty.");
       return;
     }
 
-    sessionStorage.setItem(
-      "checkout",
-      JSON.stringify({
-        firstName,
-        lastName,
-        email,
-      })
-    );
+    try {
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
+          subtotal,
+          items: cart.map((item) => ({
+            productId: item.id,
+            productName: item.name,
+            size: item.size,
+            quantity: item.quantity,
+            price: item.price,
+          })),
+        }),
+      });
 
-    navigate(`/payment?order=${data.id}`);
-  } catch (error) {
-    console.error("Checkout error:", error);
-    alert("Unable to create your order.");
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error("Order creation failed:", data);
+        alert(data.error ?? "Unable to create order.");
+        return;
+      }
+
+      sessionStorage.setItem(
+        "checkout",
+        JSON.stringify({
+          firstName,
+          lastName,
+          email,
+        })
+      );
+
+      navigate(`/payment?order=${data.id}`);
+    } catch (error) {
+      console.error("Checkout error:", error);
+      alert("Unable to create your order.");
+    }
   }
-}
 
   return (
     <main className="min-h-screen bg-white">
@@ -97,27 +97,26 @@ export default function CheckoutPage() {
               type="button"
               onClick={() => navigate("/")}
             >
-              Home
+              HOME
             </button>
 
             <button
               type="button"
               onClick={() => navigate("/?view=shop")}
             >
-              Shop
+              SHOP
             </button>
 
             <button
               type="button"
               onClick={() => navigate("/contact")}
             >
-              Contact
+              CONTACT
             </button>
 
             <button
               type="button"
               onClick={openBag}
-              className="uppercase tracking-[0.25em]"
             >
               BAG {String(totalItems).padStart(2, "0")}
             </button>
@@ -182,9 +181,9 @@ export default function CheckoutPage() {
 
           <button
             type="submit"
-            className="w-full bg-black py-5 uppercase tracking-[0.2em] text-white transition hover:bg-neutral-800"
+            className="w-full bg-black py-5 text-white transition hover:bg-neutral-800"
           >
-            Continue to Payment
+            CONTINUE TO PAYMENT
           </button>
         </form>
       </div>
