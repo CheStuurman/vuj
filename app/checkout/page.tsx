@@ -7,7 +7,7 @@ import { useCart } from "../../context/CartContext";
 import { useTransition } from "../../context/TransitionContext";
 
 export default function CheckoutPage() {
-  const { cart, openBag } = useCart();
+ const { cart, openBag, subtotal } = useCart();
   const { navigate } = useTransition();
 
   const totalItems = cart.reduce(
@@ -19,8 +19,42 @@ export default function CheckoutPage() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
 
-  function continueToPayment(e: React.FormEvent) {
-    e.preventDefault();
+  async function continueToPayment(e: React.FormEvent) {
+  e.preventDefault();
+
+  if (cart.length === 0) {
+    alert("Your bag is empty.");
+    return;
+  }
+
+  try {
+    const response = await fetch("/api/orders", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        firstName,
+        lastName,
+        email,
+        subtotal,
+        items: cart.map((item) => ({
+          productId: item.id,
+          productName: item.name,
+          size: item.size,
+          quantity: item.quantity,
+          price: item.price,
+        })),
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error("Order creation failed:", data);
+      alert(data.error ?? "Unable to create order.");
+      return;
+    }
 
     sessionStorage.setItem(
       "checkout",
@@ -31,8 +65,12 @@ export default function CheckoutPage() {
       })
     );
 
-    navigate("/payment");
+    navigate(`/payment?order=${data.id}`);
+  } catch (error) {
+    console.error("Checkout error:", error);
+    alert("Unable to create your order.");
   }
+}
 
   return (
     <main className="min-h-screen bg-white">

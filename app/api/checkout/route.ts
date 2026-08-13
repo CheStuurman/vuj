@@ -20,7 +20,7 @@ export async function POST(req: Request) {
 
     const payment = generatePaymentData({
       paymentId: String(order.id),
-      amount: Number(order.subtotal) / 100,
+      amount: Number(order.subtotal) ,
       itemName: `VÚJ Order #${order.id}`,
       customerFirstName: order.customer_first_name,
       customerLastName: order.customer_last_name,

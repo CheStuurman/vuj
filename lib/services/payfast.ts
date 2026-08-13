@@ -23,29 +23,28 @@ export function generatePaymentData(
   payment: PayFastPayment
 ) {
   const data: Record<string, string> = {
+    // Merchant details
     merchant_id: merchantId,
     merchant_key: merchantKey,
 
     return_url:
-      "http://localhost:3000/payment/success",
+       "https://www.vujlabel.com/payment/success",
 
     cancel_url:
-      "http://localhost:3000/payment/cancel",
+       "https://www.vujlabel.com/payment/cancel",
 
     notify_url:
-      "http://localhost:3000/api/payfast/notify",
+  "https://www.vujlabel.com/api/payfast/notify",
 
-    m_payment_id: payment.paymentId,
-
-    amount: payment.amount.toFixed(2),
-
-    item_name: payment.itemName,
-
+    // Buyer details
     name_first: payment.customerFirstName,
-
     name_last: payment.customerLastName,
-
     email_address: payment.customerEmail,
+
+    // Transaction details
+    m_payment_id: payment.paymentId,
+    amount: payment.amount.toFixed(2),
+    item_name: payment.itemName,
   };
 
   data.signature = generateSignature(data);
@@ -62,19 +61,19 @@ function generateSignature(
         key !== "signature" &&
         value !== ""
     )
-    .sort(([a], [b]) => a.localeCompare(b))
     .map(
       ([key, value]) =>
-        `${key}=${encodeURIComponent(value).replace(
-          /%20/g,
-          "+"
-        )}`
+        `${key}=${encodeURIComponent(
+          value.trim()
+        ).replace(/%20/g, "+")}`
     )
     .join("&");
 
-  const string =
-    output +
-    `&passphrase=${encodeURIComponent(passphrase)}`;
+  const string = passphrase
+    ? `${output}&passphrase=${encodeURIComponent(
+        passphrase.trim()
+      ).replace(/%20/g, "+")}`
+    : output;
 
   return crypto
     .createHash("md5")
