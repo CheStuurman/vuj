@@ -7,7 +7,7 @@ export async function GET() {
       id: "TEST-001",
       customer_first_name: "VÚJ",
       customer_last_name: "Test",
-      customer_email: "YOUR-EMAIL-HERE@example.com",
+      customer_email: "chestuurmanmoses@gmail.com",
       subtotal: 1890,
       order_items: [
         {
