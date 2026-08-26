@@ -4,11 +4,13 @@ import React, {
   createContext,
   useContext,
   useState,
+  useEffect,
   ReactNode,
 } from "react";
 
 export interface CartItem {
-  id: string;
+  id: number;
+  slug: string;
   name: string;
   price: number;
   image: string;
@@ -20,18 +22,22 @@ interface CartContextType {
   cart: CartItem[];
 
   addToCart: (item: CartItem) => void;
-  removeFromCart: (id: string, size: string) => void;
-  increaseQuantity: (id: string, size: string) => void;
-  decreaseQuantity: (id: string, size: string) => void;
+  removeFromCart: (id: number, size: string) => void;
+  increaseQuantity: (id: number, size: string) => void;
+  decreaseQuantity: (id: number, size: string) => void;
 
   subtotal: number;
 
   isBagOpen: boolean;
   openBag: () => void;
   closeBag: () => void;
+
+  clearCart: () => void;
 }
 
-const CartContext = createContext<CartContextType | undefined>(undefined);
+const CartContext = createContext<CartContextType | undefined>(
+  undefined
+);
 
 export function CartProvider({
   children,
@@ -41,9 +47,29 @@ export function CartProvider({
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isBagOpen, setIsBagOpen] = useState(false);
 
+  useEffect(() => {
+    const savedCart = localStorage.getItem("vuj-cart");
+
+    if (savedCart) {
+      setCart(JSON.parse(savedCart));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "vuj-cart",
+      JSON.stringify(cart)
+    );
+  }, [cart]);
+
   const openBag = () => setIsBagOpen(true);
 
   const closeBag = () => setIsBagOpen(false);
+
+  const clearCart = () => {
+    setCart([]);
+    localStorage.removeItem("vuj-cart");
+  };
 
   const addToCart = (item: CartItem) => {
     setCart((current) => {
@@ -67,7 +93,7 @@ export function CartProvider({
   };
 
   const removeFromCart = (
-    id: string,
+    id: number,
     size: string
   ) => {
     setCart((current) =>
@@ -78,7 +104,7 @@ export function CartProvider({
   };
 
   const increaseQuantity = (
-    id: string,
+    id: number,
     size: string
   ) => {
     setCart((current) =>
@@ -94,7 +120,7 @@ export function CartProvider({
   };
 
   const decreaseQuantity = (
-    id: string,
+    id: number,
     size: string
   ) => {
     setCart((current) =>
@@ -135,6 +161,7 @@ export function CartProvider({
         isBagOpen,
         openBag,
         closeBag,
+        clearCart,
       }}
     >
       {children}

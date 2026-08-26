@@ -1,14 +1,11 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 
-interface ShoppingBagFooterProps {
-  onCheckout?: () => void;
-}
+export default function ShoppingBagFooter() {
+  const router = useRouter();
 
-export default function ShoppingBagFooter({
-  onCheckout,
-}: ShoppingBagFooterProps) {
   const {
     subtotal,
     cart,
@@ -19,6 +16,11 @@ export default function ShoppingBagFooter({
     (total, item) => total + item.quantity,
     0
   );
+
+  const handleCheckout = () => {
+    closeBag();
+    router.push("/checkout");
+  };
 
   return (
     <footer className="border-t border-neutral-200 bg-white p-6">
@@ -42,7 +44,7 @@ export default function ShoppingBagFooter({
 
       <button
         type="button"
-        onClick={onCheckout}
+        onClick={handleCheckout}
         className="mb-3 w-full bg-black px-6 py-4 text-sm uppercase tracking-[0.2em] text-white transition hover:bg-neutral-800"
       >
         Checkout
@@ -56,5 +58,5 @@ export default function ShoppingBagFooter({
         Continue Shopping
       </button>
     </footer>
-  );
+      );
 }
