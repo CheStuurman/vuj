@@ -83,9 +83,12 @@ export async function sendOrderConfirmationEmail(
       <body style="margin:0;padding:0;background:#ffffff;color:#111111;font-family:Arial,Helvetica,sans-serif;">
         <div style="max-width:620px;margin:0 auto;padding:48px 24px;">
           <div style="text-align:center;margin-bottom:48px;">
-            <div style="font-size:22px;letter-spacing:0.35em;">
-              VÚJ
-            </div>
+            <img
+              src="https://www.vujlabel.com/logo.jpg"
+              alt="VÚJ"
+              width="180"
+              style="display:block;width:180px;height:auto;margin:0 auto;border:0;"
+            />
           </div>
 
           <h1 style="font-size:28px;font-weight:400;margin:0 0 24px;">
